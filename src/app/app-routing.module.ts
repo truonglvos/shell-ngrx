@@ -1,10 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ShellCom1Component } from './shell-com1/shell-com1.component';
+import { loadRemoteModule } from '@angular-architects/module-federation';
+import { environment } from '../environment/environment';
 
-const routes: Routes = [];
+export const routes: Routes = [
+  {
+    path: 'shell-com1',
+    component: ShellCom1Component,
+  },
+  {
+    path: '**',
+    redirectTo: 'shell-com1',
+    pathMatch: 'full',
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
