@@ -76,4 +76,8 @@ export class AuthService {
   getAuthorizationToken() {
     return sessionStorage.getItem(ACCESS_TOKEN) || '';
   }
+
+  refreshToken(): Observable<{ refreshToken: string }> {
+    return of({ refreshToken: 'new AccessToken' });
+  }
 }
