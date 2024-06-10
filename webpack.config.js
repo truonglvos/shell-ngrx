@@ -29,6 +29,8 @@ module.exports = {
         "./AuthService": "./src/app/services/auth.service.ts",
         "./selectIsLogin": "./src/app/states/auth/auth.selector.ts",
         "./updateIsLogin": "./src/app/states/auth/auth.action.ts",
+        "./login": "./src/app/states/auth/auth.action.ts",
+        "./selectAuthState": "./src/app/states/auth/auth.selector.ts",
       },
       shared: {
         "@ngrx/store": {

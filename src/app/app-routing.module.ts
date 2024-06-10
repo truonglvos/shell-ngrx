@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ShellCom1Component } from './shell-com1/shell-com1.component';
-import { loadRemoteModule } from '@angular-architects/module-federation';
-import { environment } from '../environment/environment';
 
 export const routes: Routes = [
   {

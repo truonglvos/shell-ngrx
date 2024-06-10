@@ -1,5 +1,9 @@
 <router-outlet></router-outlet>
-<ng-container *ngIf="{ a: vm$ | async } as vm">
-  <h2>shell app isLogin: {{ vm.a }}</h2>
-  <button (click)="changeLogin(vm.a)">shell click</button>
+<ng-container *ngIf="vm$ | async as vm">
+  <h2>shell app isLogin: {{ vm | json }}</h2>
+  <button (click)="loginShell()">shell login</button>
 </ng-container>
+<div style="margin-top: 10px">
+  <button (click)="logoutShell()">shell logout</button>
+</div>
+<a [routerLink]="'mfe1'" style="margin-top: 10px">go to Mfe1</a>

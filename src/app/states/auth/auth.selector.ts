@@ -7,3 +7,5 @@ export const selectIsLogin = createSelector(
   selectAuth,
   (state) => state.isLogin
 );
+
+export const selectAuthState = createSelector(selectAuth, (state) => state);
