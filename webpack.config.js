@@ -32,6 +32,9 @@ module.exports = {
         "./login": "./src/app/states/auth/auth.action.ts",
         "./selectAuthState": "./src/app/states/auth/auth.selector.ts",
       },
+      remotes: {
+        MFE1: `${process.env.MFE1_URL}/remoteEntry.js`,
+      },
       shared: {
         "@ngrx/store": {
           eager: true,
