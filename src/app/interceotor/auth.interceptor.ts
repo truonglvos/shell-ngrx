@@ -7,7 +7,6 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  EMPTY,
   Observable,
   ReplaySubject,
   catchError,
@@ -30,9 +29,9 @@ export class AuthIntercep implements HttpInterceptor {
     share()
   );
   intercept(
-    req: HttpRequest<any>,
+    req: HttpRequest<unknown>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<unknown>> {
     const authToken = this.authService.getAuthorizationToken();
     const authReq = req.clone({
       headers: req.headers.set('Authorization', authToken),

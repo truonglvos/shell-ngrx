@@ -12,6 +12,6 @@ export const authGuard: CanActivateFn = (
   state: RouterStateSnapshot
 ) => {
   const store$ = inject(Store);
-  console.log('@@@check guard');
+  console.log('@@@check guard', next, state);
   return store$.select(selectIsLogin).pipe();
 };

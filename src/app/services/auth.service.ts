@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
-  EMPTY,
   Observable,
   catchError,
   delay,
@@ -12,7 +11,6 @@ import {
 import { User } from '../states/auth';
 import { ACCESS_TOKEN } from '../constants';
 import { HttpClient } from '@angular/common/http';
-import { ApiUrl } from '../constants/apiUrl';
 import { Router } from '@angular/router';
 
 @Injectable({

@@ -36,6 +36,11 @@ module.exports = {
         MFE1: `${process.env.MFE1_URL}/remoteEntry.js`,
       },
       shared: {
+        "truonlv4-lib/image": {
+          eager: true,
+          singleton: true,
+          requiredVersion: dependencies["truonlv4-lib/image"],
+        },
         "@ngrx/store": {
           eager: true,
           singleton: true,

@@ -8,7 +8,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class ShellCom1Component {
   constructor(private authService: AuthService) {
-    this.authService.isLogin$.subscribe((v: any) => {
+    this.authService.isLogin$.subscribe((v: unknown) => {
       console.log('@@@shell', v);
     });
   }

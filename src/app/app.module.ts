@@ -1,3 +1,4 @@
+import { ImageModule } from 'truonlv4-lib/image';
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -18,9 +19,14 @@ import { AuthIntercep } from './interceotor/auth.interceptor';
     BrowserModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers, { metaReducers }),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: !isDevMode(),
+      trace: true,
+    }),
     EffectsModule.forRoot([AuthEffect]),
     HttpClientModule,
+    ImageModule.forRoot({ shell: '', mfe: '' }),
   ],
   providers: [
     {
