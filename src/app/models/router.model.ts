@@ -11,4 +11,5 @@ export interface RouterDynamic {
   exposedModule: string;
   path: string;
   menu?: MenuItem[];
+  guard?: boolean;
 }

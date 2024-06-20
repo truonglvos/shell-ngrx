@@ -1,4 +1,3 @@
-<router-outlet></router-outlet>
 <ng-container *ngIf="vm$ | async as vm">
   <h2>shell app isLogin: {{ vm | json }}</h2>
   <button (click)="loginShell()">shell login</button>
@@ -6,4 +5,4 @@
 <div style="margin-top: 10px">
   <button (click)="logoutShell()">shell logout</button>
 </div>
-<a [routerLink]="'mfe1'" style="margin-top: 10px">go to Mfe1</a>
+<router-outlet></router-outlet>

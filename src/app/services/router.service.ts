@@ -21,6 +21,13 @@ export class RouterService {
         remoteEntry: 'http://localhost:4202/remoteEntry.js',
         exposedModule: 'Mfe2Module',
       },
+      {
+        type: 'module',
+        path: 'builder',
+        remoteEntry: 'http://localhost:4203/remoteEntry.js',
+        exposedModule: 'BuilderModule',
+        guard: true,
+      },
     ]);
   }
 }

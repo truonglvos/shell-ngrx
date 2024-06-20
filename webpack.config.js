@@ -34,6 +34,7 @@ module.exports = {
       },
       remotes: {
         MFE1: `${process.env.MFE1_URL}/remoteEntry.js`,
+        BUILDER: `${process.env.BUILDER_URL}/remoteEntry.js`,
       },
       shared: {
         "truonlv4-lib/image": {

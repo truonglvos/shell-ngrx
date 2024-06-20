@@ -5,7 +5,7 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
 import { Store } from '@ngrx/store';
 import * as authAction from './states/auth/auth.action';
 import * as authSelector from './states/auth/auth.selector';
-import { authGuard } from './guards/auth.guard';
+import { authGuard, notCheckAuthGuard } from './guards/auth.guard';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
           ...listRouter.map(
             (item) =>
               ({
-                canMatch: [authGuard],
+                canMatch: [item.guard ? authGuard : notCheckAuthGuard],
                 path: item.path,
                 loadChildren: () => {
                   return loadRemoteModule({

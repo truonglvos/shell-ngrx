@@ -15,3 +15,11 @@ export const authGuard: CanActivateFn = (
   console.log('@@@check guard', next, state);
   return store$.select(selectIsLogin).pipe();
 };
+
+export const notCheckAuthGuard: CanActivateFn = (
+  next: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  console.log('@@@check guard', next, state);
+  return true;
+};
