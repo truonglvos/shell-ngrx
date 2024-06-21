@@ -1,8 +1,10 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <h2>shell app isLogin: {{ vm | json }}</h2>
-  <button (click)="loginShell()">shell login</button>
+  <ng-container *ngIf="vm.common.pathsDisplayLeftMenu.includes(vm.common.path)">
+    <h2>shell app isLogin: {{ vm | json }}</h2>
+    <button (click)="loginShell()">shell login</button>
+    <div style="margin-top: 10px">
+      <button (click)="logoutShell()">shell logout</button>
+    </div>
+  </ng-container>
 </ng-container>
-<div style="margin-top: 10px">
-  <button (click)="logoutShell()">shell logout</button>
-</div>
 <router-outlet></router-outlet>

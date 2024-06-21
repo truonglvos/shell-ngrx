@@ -12,9 +12,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthEffect } from './states/auth/auth.effect';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthIntercep } from './interceotor/auth.interceptor';
+import { AuthenticationComponent } from './components/authentication/authentication.component';
 
 @NgModule({
-  declarations: [AppComponent, ShellCom1Component],
+  declarations: [AppComponent, ShellCom1Component, AuthenticationComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

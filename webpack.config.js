@@ -31,6 +31,7 @@ module.exports = {
         "./updateIsLogin": "./src/app/states/auth/auth.action.ts",
         "./login": "./src/app/states/auth/auth.action.ts",
         "./selectAuthState": "./src/app/states/auth/auth.selector.ts",
+        "./InjectStyleService": "./src/app/services/inject-style.service.ts",
       },
       remotes: {
         MFE1: `${process.env.MFE1_URL}/remoteEntry.js`,
