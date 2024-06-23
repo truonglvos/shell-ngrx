@@ -48,13 +48,17 @@ export class AuthService {
       userName: 'truonglv4',
       phone: '0965480046',
       accessToken: 'accessToken',
+      refreshToken: 'refreshToken',
     }).pipe(
       delay(3000),
       tap((u) => {
-        sessionStorage.setItem(ACCESS_TOKEN, u.accessToken);
+        this.setAccessToken(u.accessToken);
+        if (u.refreshToken) {
+          this.setRefreshToken(u.refreshToken);
+        }
+        this.setUser(u);
       }),
       catchError((error) => {
-        sessionStorage.removeItem(ACCESS_TOKEN);
         return throwError(() => error);
       })
     );
@@ -77,10 +81,6 @@ export class AuthService {
         this.setRefreshToken(null);
       })
     );
-  }
-
-  getAuthorizationToken() {
-    return sessionStorage.getItem(ACCESS_TOKEN) || '';
   }
 
   refreshToken(): Observable<{ refreshToken: string }> {

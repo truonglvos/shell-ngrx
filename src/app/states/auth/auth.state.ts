@@ -8,6 +8,7 @@ export interface User {
   phone: string;
   userName: string;
   accessToken: string;
+  refreshToken?: string;
 }
 
 export interface AuthState {
