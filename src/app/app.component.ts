@@ -97,6 +97,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   logoutShell() {
-    this.store.dispatch(authAction.logOut());
+    this.store.dispatch(authAction.logout());
   }
 }

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
-  BehaviorSubject,
   Observable,
   catchError,
   delay,
+  finalize,
   of,
+  take,
   tap,
   throwError,
 } from 'rxjs';
@@ -14,15 +15,13 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from './cookie.service';
-import { AuthenticatedUser } from '../models/authenticated.user';
+import { ApiUrl } from '../constants/apiUrl';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   jwtHelper: JwtHelperService;
-  isLogin = new BehaviorSubject(false);
-  isLogin$ = this.isLogin.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -62,23 +61,22 @@ export class AuthService {
   }
 
   checkLogin(): Observable<User | null> {
-    const token = sessionStorage.getItem(ACCESS_TOKEN);
-    if (token) {
-      return of({
-        email: 'anhtruonglavm2@gmail.com',
-        userName: 'truonglv4',
-        phone: '0965480046',
-        accessToken: 'accessToken',
-      });
+    const user = this.getCurrentUser();
+    if (user) {
+      return of(user);
     }
-
     return of(null);
   }
 
-  logOut(): Observable<boolean> {
-    sessionStorage.removeItem(ACCESS_TOKEN);
-    this.router.navigate(['/']);
-    return of(true);
+  logout(): Observable<unknown> {
+    return this.http.get<unknown>(`${ApiUrl.Url.logout}`).pipe(
+      take(1),
+      finalize(() => {
+        this.setUser(null);
+        this.setAccessToken(null);
+        this.setRefreshToken(null);
+      })
+    );
   }
 
   getAuthorizationToken() {
@@ -104,10 +102,10 @@ export class AuthService {
   }
 
   getAccessToken() {
-    return this.cookieService.get(ACCESS_TOKEN) || null;
+    return this.cookieService.get(ACCESS_TOKEN);
   }
 
-  setAccessToken(token: string) {
+  setAccessToken(token: string | null) {
     if (!token) {
       this.cookieService.remove(ACCESS_TOKEN);
       return;
@@ -121,7 +119,7 @@ export class AuthService {
 
   authenticate(): boolean {
     try {
-      const accessToken = this.getAccessToken() || '';
+      const accessToken = this.getAccessToken();
       const tknInfo = JSON.parse(atob(accessToken.split('.')[1]));
 
       if (!tknInfo.verified) {
@@ -135,12 +133,28 @@ export class AuthService {
     }
   }
 
-  getCurrentUser(): AuthenticatedUser | null {
-    const user = this.cookieService.get(CURRENT_USER) || '';
+  getCurrentUser(): User | null {
+    const user = this.cookieService.get(CURRENT_USER);
     try {
-      return JSON.parse(user) as AuthenticatedUser;
+      return JSON.parse(user) as User;
     } catch {
       return null;
     }
+  }
+
+  setRefreshToken(refreshToken: string | null) {
+    if (!refreshToken) {
+      this.cookieService.remove(REFRESH_TOKEN);
+      return;
+    }
+    this.cookieService.set(REFRESH_TOKEN, refreshToken);
+  }
+
+  setUser(user: User | null) {
+    if (!user) {
+      this.cookieService.remove(CURRENT_USER);
+      return;
+    }
+    this.cookieService.set(CURRENT_USER, JSON.stringify(user));
   }
 }

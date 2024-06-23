@@ -1,8 +1,8 @@
 import { Injectable, isDevMode } from '@angular/core';
-import { CookieAttributes, get, remove, set } from 'js-cookie';
+import Cookies, { CookieAttributes } from 'js-cookie';
 
 export interface ICookieService {
-  get(name: string): string | undefined;
+  get(name: string): string;
   set(name: string, value: string, options?: CookieAttributes): void;
   remove(name: string, options?: CookieAttributes): void;
 }
@@ -11,8 +11,8 @@ export interface ICookieService {
   providedIn: 'root',
 })
 export class CookieService implements ICookieService {
-  get(name: string): string | undefined {
-    return get(name);
+  get(name: string): string {
+    return Cookies.get(name) || '';
   }
   set(
     name: string,
@@ -27,9 +27,9 @@ export class CookieService implements ICookieService {
         options.secure = true;
       }
     }
-    set(name, value, options);
+    Cookies.set(name, value, options);
   }
   remove(name: string, options?: CookieAttributes | undefined): void {
-    remove(name, options);
+    Cookies.remove(name, options);
   }
 }

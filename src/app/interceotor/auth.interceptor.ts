@@ -18,11 +18,14 @@ import {
   throwError,
 } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { JWT_INVALID } from '../constants';
+import { Store } from '@ngrx/store';
+import { logout } from '../states/auth';
 
 @Injectable()
 export class AuthIntercep implements HttpInterceptor {
   private refreshToken$$ = new ReplaySubject<void>(1);
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private store: Store) {}
   private refreshToken$ = this.refreshToken$$.pipe(
     exhaustMap(() => this.authService.refreshToken()),
     map((res) => res.refreshToken),
@@ -38,21 +41,28 @@ export class AuthIntercep implements HttpInterceptor {
     });
     return next.handle(authReq).pipe(
       catchError((error) => {
-        console.log('@@@intercep', error);
         if (error instanceof HttpErrorResponse) {
-          if (error.status == 401) {
-            this.refreshToken$$.next();
-            return this.refreshToken$.pipe(
-              take(1),
-              catchError((error) => throwError(() => error)),
-              switchMap((token) =>
-                next.handle(
-                  req.clone({
-                    headers: req.headers.set('Authorization', token),
-                  })
-                )
-              )
-            );
+          switch (error.status) {
+            case 401:
+              if (error.message === JWT_INVALID) {
+                this.refreshToken$$.next();
+                return this.refreshToken$.pipe(
+                  take(1),
+                  catchError((error) => throwError(() => error)),
+                  switchMap((token) =>
+                    next.handle(
+                      req.clone({
+                        headers: req.headers.set('Authorization', token),
+                      })
+                    )
+                  )
+                );
+              } else {
+                this.store.dispatch(logout());
+              }
+              break;
+            default:
+              break;
           }
           return throwError(() => error);
         }

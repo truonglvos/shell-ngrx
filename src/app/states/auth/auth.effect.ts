@@ -37,21 +37,14 @@ export class AuthEffect {
   checkLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(authAction.checkLogin),
-      tap(() =>
-        this.store.dispatch(authAction.updateLoading({ loading: true }))
-      ),
       exhaustMap(() =>
         this.authService.checkLogin().pipe(
           map((user) => {
             if (user) {
               return authAction.loginSuccess({ user });
             }
-            return authAction.actionNoop();
-          }),
-          catchError((error: Error) => of(authAction.loginError({ error }))),
-          finalize(() =>
-            this.store.dispatch(authAction.updateLoading({ loading: false }))
-          )
+            return authAction.logout();
+          })
         )
       )
     )
@@ -59,9 +52,14 @@ export class AuthEffect {
 
   logout$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(authAction.logOut),
+      ofType(authAction.logout),
       exhaustMap(() =>
-        this.authService.logOut().pipe(map(() => authAction.logOutSuccess()))
+        this.authService.logout().pipe(
+          map(() => authAction.logoutSuccess()),
+          finalize(() => {
+            this.router.navigate(['/login']);
+          })
+        )
       )
     )
   );

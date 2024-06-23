@@ -26,8 +26,8 @@ export const updateLoading = createAction(
   props<{ loading: boolean }>()
 );
 
-export const logOut = createAction('[Log out] Log out');
-export const logOutSuccess = createAction('[Log out] Log out Success');
+export const logout = createAction('[Log out] Log out');
+export const logoutSuccess = createAction('[Log out] Log out Success');
 
 export const checkLogin = createAction('[Check login] login');
 export const actionNoop = createAction('[Noop] noop');

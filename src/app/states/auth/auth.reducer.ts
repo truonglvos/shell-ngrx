@@ -22,7 +22,7 @@ const authReducer = createReducer(
     ...state,
     loading,
   })),
-  on(authAction.logOutSuccess, (state) => ({
+  on(authAction.logoutSuccess, (state) => ({
     ...state,
     isLogin: false,
     user: undefined,
