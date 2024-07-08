@@ -6,9 +6,13 @@ export interface Error {
 export interface User {
   email: string;
   phone: string;
-  userName: string;
+  username: string;
   accessToken: string;
   refreshToken?: string;
+  roles: {
+    roleDescEN: string;
+    roleId: number;
+  }[];
 }
 
 export interface AuthState {

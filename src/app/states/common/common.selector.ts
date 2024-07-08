@@ -10,3 +10,8 @@ export const commonListPathLeftMenuSelector = createSelector(
   commonSelector,
   (state) => state.pathsDisplayLeftMenu
 );
+
+export const selectRouterConfig = createSelector(
+  commonSelector,
+  (state) => state.routerConfig
+);

@@ -8,3 +8,18 @@
   </ng-container>
 </ng-container>
 <router-outlet></router-outlet>
+
+<p-fileUpload
+  mode="basic"
+  chooseLabel="Choose"
+  chooseIcon="pi pi-upload"
+  name="files"
+  url="http://localhost:3000/user/upload"
+  accept="image/*"
+  maxFileSize="1000000"
+  [multiple]="true"
+  method="post"
+  (onSelect)="onUpload($event)"
+/>
+
+<button (click)="upLoad()">upload</button>

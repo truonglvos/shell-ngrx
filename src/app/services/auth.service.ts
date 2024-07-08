@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   Observable,
   catchError,
-  delay,
   finalize,
   of,
   take,
@@ -11,11 +10,12 @@ import {
 } from 'rxjs';
 import { User } from '../states/auth';
 import { ACCESS_TOKEN, CURRENT_USER, REFRESH_TOKEN } from '../constants';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { CookieService } from './cookie.service';
 import { ApiUrl } from '../constants/apiUrl';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -32,25 +32,7 @@ export class AuthService {
   }
 
   login(payload: { userName: string; password: string }): Observable<User> {
-    console.log(payload);
-    // return this.http.post<User>(ApiUrl.Url.login, {}).pipe(
-    //   catchError(() =>
-    //     of({
-    //       email: 'anhtruonglavm2@gmail.com',
-    //       userName: 'truonglv4',
-    //       phone: '0965480046',
-    //       accessToken: 'accessToken',
-    //     })
-    //   )
-    // );
-    return of({
-      email: 'anhtruonglavm2@gmail.com',
-      userName: 'truonglv4',
-      phone: '0965480046',
-      accessToken: 'accessToken',
-      refreshToken: 'refreshToken',
-    }).pipe(
-      delay(3000),
+    return this.http.post<User>(`${environment.bff}/auth/login`, payload).pipe(
       tap((u) => {
         this.setAccessToken(u.accessToken);
         if (u.refreshToken) {
@@ -83,8 +65,21 @@ export class AuthService {
     );
   }
 
-  refreshToken(): Observable<{ refreshToken: string }> {
-    return of({ refreshToken: 'new AccessToken' });
+  refreshToken(): Observable<{ refreshToken: string; accessToken: string }> {
+    const headers = new HttpHeaders();
+    return this.http
+      .get<{ refreshToken: string; accessToken: string }>(
+        `${environment.bff}/auth/refresh`,
+        {
+          headers: headers.set('refresh', 'true'),
+        }
+      )
+      .pipe(
+        tap((u) => {
+          this.setAccessToken(u.accessToken);
+          this.setRefreshToken(u.refreshToken);
+        })
+      );
   }
 
   // use coookie

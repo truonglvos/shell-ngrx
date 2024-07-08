@@ -5,7 +5,7 @@ import * as authAction from './auth.action';
 import { AuthService } from '../../services/auth.service';
 import { catchError, exhaustMap, finalize, map, of, tap } from 'rxjs';
 import { Error } from './auth.state';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable()
 export class AuthEffect {
@@ -13,7 +13,8 @@ export class AuthEffect {
     private actions$: Actions,
     private store: Store,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   handleLogin$ = createEffect(() =>
@@ -22,15 +23,17 @@ export class AuthEffect {
       tap(() =>
         this.store.dispatch(authAction.updateLoading({ loading: true }))
       ),
-      exhaustMap((action) =>
-        this.authService.login(action).pipe(
+      exhaustMap((action) => {
+        console.log('@@@login', action);
+        return this.authService.login(action).pipe(
           map((user) => authAction.loginSuccess({ user })),
           catchError((error: Error) => of(authAction.loginError({ error }))),
-          finalize(() =>
-            this.store.dispatch(authAction.updateLoading({ loading: false }))
-          )
-        )
-      )
+          finalize(() => {
+            this.store.dispatch(authAction.updateLoading({ loading: false }));
+            this.router.navigate(['/']);
+          })
+        );
+      })
     )
   );
 
@@ -43,7 +46,7 @@ export class AuthEffect {
             if (user) {
               return authAction.loginSuccess({ user });
             }
-            return authAction.logout();
+            return authAction.actionNoop();
           })
         )
       )

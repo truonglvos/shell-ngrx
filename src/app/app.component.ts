@@ -5,17 +5,16 @@ import {
   OnInit,
   inject,
 } from '@angular/core';
-import { RouterService } from './services/router.service';
-import { NavigationEnd, Route, Router } from '@angular/router';
-import { loadRemoteModule } from '@angular-architects/module-federation';
+import { NavigationEnd, Router } from '@angular/router';
 import { Store, createSelector } from '@ngrx/store';
-import { authGuard, notCheckAuthGuard } from './guards/auth.guard';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import * as commonAction from './states/common/common.action';
 import * as commonSelector from './states/common/common.selector';
 import * as authAction from './states/auth/auth.action';
 import * as authSelector from './states/auth/auth.selector';
+import { UploadEvent } from 'primeng/fileupload';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +22,7 @@ import * as authSelector from './states/auth/auth.selector';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit, OnDestroy {
+  files: File[] = [];
   title = 'shell';
   appSelector = createSelector(
     authSelector.selectAuthState,
@@ -30,13 +30,16 @@ export class AppComponent implements OnInit, OnDestroy {
     (auth, common) => ({
       auth,
       common,
+      selectRolesString: (auth.user?.roles || []).map(
+        (item) => item.roleDescEN
+      ),
     })
   );
   vm$ = this.store.select(this.appSelector);
   constructor(
-    private routerService: RouterService,
     private router: Router,
-    private store: Store
+    private store: Store,
+    private http: HttpClient
   ) {}
   destroyRef = inject(DestroyRef);
 
@@ -53,31 +56,6 @@ export class AppComponent implements OnInit, OnDestroy {
           })
         )
       );
-    this.routerService
-      .loadRouter()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((listRouter) => {
-        this.router.resetConfig([
-          this.router.config[0],
-          ...listRouter.map(
-            (item) =>
-              ({
-                canMatch: [item.guard ? authGuard : notCheckAuthGuard],
-                path: item.path,
-                loadChildren: () => {
-                  return loadRemoteModule({
-                    type: 'module',
-                    remoteEntry: item.remoteEntry,
-                    exposedModule: `./${item.exposedModule}`,
-                  }).then((m) => {
-                    return m[item.exposedModule];
-                  });
-                },
-              } as Route)
-          ),
-          this.router.config[1],
-        ]);
-      });
     this.store.dispatch(authAction.checkLogin());
     window.addEventListener('v-logout', this.handleLogout);
   }
@@ -98,5 +76,24 @@ export class AppComponent implements OnInit, OnDestroy {
 
   logoutShell() {
     this.store.dispatch(authAction.logout());
+  }
+
+  onUpload(event: any) {
+    this.files = event.currentFiles;
+    console.log(this.files);
+  }
+
+  upLoad() {
+    const formData = new FormData();
+    console.log(this.files);
+    for (let i = 0; i < this.files.length; i++) {
+      formData.append('files', this.files[i], this.files[i].name);
+    }
+
+    this.http
+      .request('post', 'http://localhost:3000/user/upload', {
+        body: formData,
+      })
+      .subscribe();
   }
 }

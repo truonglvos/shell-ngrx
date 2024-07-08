@@ -9,3 +9,7 @@ export const selectIsLogin = createSelector(
 );
 
 export const selectAuthState = createSelector(selectAuth, (state) => state);
+
+export const selectRolesString = createSelector(selectAuth, (state) =>
+  (state.user?.roles || []).map((item) => item.roleDescEN)
+);

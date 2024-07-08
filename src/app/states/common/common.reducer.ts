@@ -14,7 +14,11 @@ const commonReducer = createReducer(
       ...state,
       pathsDisplayLeftMenu,
     })
-  )
+  ),
+  on(commonAction.loadRouterConfigSuccess, (state, { routerConfig }) => ({
+    ...state,
+    routerConfig,
+  }))
 );
 
 export function reducer(state: CommonState | undefined, action: Action) {
