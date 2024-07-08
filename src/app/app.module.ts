@@ -91,7 +91,7 @@ export class AppModule {
             canMatch: [item.guard ? authGuard : notCheckAuthGuard],
             path: item.path,
             loadChildren: () => {
-              return loadRemoteModule({
+              return loadRemoteModule<{ [index: string]: unknown }>({
                 type: 'module',
                 remoteEntry: item.remoteEntry,
                 exposedModule: `./${item.exposedModule}`,
