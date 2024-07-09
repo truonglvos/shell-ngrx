@@ -1,7 +1,7 @@
 export const environment = {
-  production: true,
-  bff: 'https://mfe-backend.onrender.com',
+  production: false,
   mfe: {
     mfe1: 'http://localhost:4201',
   },
+  bff: 'http://localhost:3000',
 };
