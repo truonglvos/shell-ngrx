@@ -43,7 +43,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
-      logOnly: !isDevMode(),
+      logOnly: isDevMode(),
       trace: true,
     }),
     EffectsModule.forRoot([AuthEffect]),
